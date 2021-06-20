@@ -138,6 +138,10 @@ class Scene:
                 if not hasattr(self, 'volume_raster'):
                     self.volume_raster = tina.VolumeRaster(self.engine, **self.options)
                 raster = self.volume_raster
+            elif hasattr(object, 'get_nlines'):
+                if not hasattr(self, 'line_raster'):
+                    self.line_raster = tina.LineRaster(self.engine, **self.options)
+                raster = self.line_raster
             else:
                 raise ValueError(f'cannot determine raster type of object: {object}')
 

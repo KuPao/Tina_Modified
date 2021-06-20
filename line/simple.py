@@ -3,10 +3,10 @@ from ..common import *
 
 @ti.data_oriented
 class SimpleLine:
-    def __init__(self, radius=0.02):
-        self.verts = ti.Vector.field(3, float, 2)
-        self.sizes = ti.field(float, 2)
-        self.colors = ti.Vector.field(3, float, 2)
+    def __init__(self, maxverts=65535, radius=0.02):
+        self.verts = ti.Vector.field(3, float, maxverts)
+        self.sizes = ti.field(float, maxverts)
+        self.colors = ti.Vector.field(3, float, maxverts)
         self.nline = ti.field(int, ())
 
         @ti.materialize_callback
@@ -14,17 +14,19 @@ class SimpleLine:
             self.sizes.fill(radius)
             self.colors.fill(1)
 
+        self.maxverts = maxverts
+
     @ti.func
     def pre_compute(self):
         pass
 
     @ti.func
     def get_nlines(self):
-        return min(self.nline[None], 2)
+        return min(self.nline[None], self.maxverts)
 
     @ti.func
-    def get_line_verts(self):
-        return [self.verts[0], self.verts[1]]
+    def get_line_verts(self, n):
+        return [self.verts[n], self.verts[n + 1]]
 
     @ti.func
     def get_particle_position(self, n):
