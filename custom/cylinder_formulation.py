@@ -89,4 +89,26 @@ class PrimitiveFormulation:
         elif distance > 0:
             direction = -1
         distance = abs(distance)
-        return result, direction, distance
+        return result[:], direction, distance
+
+    def Plane_Point(self, plane, normal, surface_point):
+        x, y, z, t = symbols('x,y,z,t')
+        param = plane.subs(x, surface_point[0]+normal[0]*t).subs(y, surface_point[1]+normal[1]*t).subs(z, surface_point[2]+normal[2]*t)
+        sol = solve([param], t)
+        result = []
+        direction = 0
+        distance = sol[t]
+        # if(abs(sol[0][0])<abs(sol[1][0])):
+        #     distance = sol[0][0]
+            
+        # else:
+        #     distance = sol[1][0]
+        result.append(float(surface_point[0]+normal[0]*distance))
+        result.append(float(surface_point[1]+normal[1]*distance))
+        result.append(float(surface_point[2]+normal[2]*distance))
+        if distance < 0:
+            direction = -1
+        elif distance > 0:
+            direction = 1
+        distance = abs(distance)
+        return result[:], direction, distance
